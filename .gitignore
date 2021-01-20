@@ -2,3 +2,5 @@
 .gradle/
 .idea/
 build/
+app/release/output.json
+app/release/ryoyuhk_1.0.1_release_20210115001.apk
