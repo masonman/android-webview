@@ -8,14 +8,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String BASE_URL = BuildConfig.baseUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +27,13 @@ public class MainActivity extends AppCompatActivity {
         setStatusBarFullTransparent();
 
         getSupportActionBar().hide();
+
         WebView webView = findViewById(R.id.my_web_view);
         initWebSettings(webView, this);
-        webView.loadUrl("https://ryoyuhk.gobindo.com");
+        // JS调用 window.bindo_utils.getDeviceStatusBarHeight()，返回当前设备状态栏的高度（单位像素）
+        // JS调用 window.bindo_utils.setStatusBarTextColor(String color)，通过传递参数（黑色："black"，白色："white"）来设置当前设备的状态栏字体颜色
+        webView.addJavascriptInterface(this, "bindo_utils");
+        webView.loadUrl(BASE_URL);
     }
 
     protected static void initWebSettings( WebView webView, Context context) {
@@ -51,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setDisplayZoomControls(false);
         //设置支持js
         webSettings.setJavaScriptEnabled(true);
-        webSettings.setSavePassword(false);
         //设置 缓存模式
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         // 开启 DOM storage API 功能
@@ -68,9 +73,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) webView.getLayoutParams();
-        lp.topMargin = getStatusBarHeight(context);
-        webView.setLayoutParams(lp);
+        // 适配刘海屏
+//        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) webView.getLayoutParams();
+//        lp.topMargin = getStatusBarHeight(context);
+//        webView.setLayoutParams(lp);
     }
 
     /**
@@ -83,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.WHITE);
+            window.setStatusBarColor(Color.TRANSPARENT);
         } else if (Build.VERSION.SDK_INT >= 19) {//19表示4.4
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             //虚拟键盘也透明
@@ -101,5 +107,30 @@ public class MainActivity extends AppCompatActivity {
         int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
         int height = resources.getDimensionPixelSize(resourceId);
         return height;
+    }
+
+    /**
+     * 提供H5来获取设备的顶部状态栏的高度
+     * @return
+     */
+    @JavascriptInterface
+    public int getDeviceStatusBarHeight() {
+        return getStatusBarHeight(this);
+    }
+
+    /**
+     * 提供给H5来设置当前设备的状态栏字体颜色，参数"black"或者"white"
+     * @param color
+     */
+    @JavascriptInterface
+    public void setStatusBarTextColor(String color) {
+        Window window = getWindow();
+        if (color.equalsIgnoreCase("black")) {
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        } else if (color.equalsIgnoreCase("white")) {
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        }
     }
 }

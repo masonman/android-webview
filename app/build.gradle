@@ -10,11 +10,27 @@ android {
         versionCode 102
         versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // 必须要保证所有的flavor 都属于同一个维度
+        flavorDimensions "default"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        ryoyuhk {
+            versionCode 102
+            versionName "1.0.2"
+            applicationId 'com.bindo.ryoyuhk'
+            buildConfigField("String", "baseUrl", "\"https://ryoyuhk.gobindo.com\"")
+        }
+        dockyard {
+            versionCode 100
+            versionName "1.0.0"
+            applicationId 'com.bindo.dockyard'
+            buildConfigField("String", "baseUrl", "\"https://dockyard.alpha.gobindo.com\"")
         }
     }
 }
