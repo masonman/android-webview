@@ -21,8 +21,8 @@ android {
     }
     productFlavors {
         ryoyuhk {
-            versionCode 102
-            versionName "1.0.2"
+            versionCode 103
+            versionName "1.0.3"
             applicationId 'com.bindo.ryoyuhk'
             buildConfigField("String", "baseUrl", "\"https://ryoyuhk.gobindo.com\"")
         }

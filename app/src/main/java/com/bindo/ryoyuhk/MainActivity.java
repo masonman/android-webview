@@ -12,6 +12,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -74,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // 适配刘海屏
-//        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) webView.getLayoutParams();
-//        lp.topMargin = getStatusBarHeight(context);
-//        webView.setLayoutParams(lp);
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) webView.getLayoutParams();
+        lp.topMargin = getStatusBarHeight(context);
+        webView.setLayoutParams(lp);
     }
 
     /**
