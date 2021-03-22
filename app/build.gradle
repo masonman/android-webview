@@ -30,7 +30,8 @@ android {
             versionCode 100
             versionName "1.0.0"
             applicationId 'com.bindo.dockyard'
-            buildConfigField("String", "baseUrl", "\"https://alpha.alpha.gobindo.com\"")
+//            buildConfigField("String", "baseUrl", "\"https://dockyard.alpha.gobindo.com\"")
+            buildConfigField("String", "baseUrl", "\"https://alpha.stg.gobindo.com\"")
         }
     }
 }

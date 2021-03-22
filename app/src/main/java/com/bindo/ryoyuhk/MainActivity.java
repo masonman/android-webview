@@ -8,11 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -27,9 +29,12 @@ import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
 import com.bindo.ryoyuhk.Utils.PhotoUtils;
 import com.bindo.ryoyuhk.zxing.android.CaptureActivity;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_SCAN = 2;
     private WebView webView;
     private ValueCallback<Uri[]> mUploadCallbackAboveL;
+    private final static int PHOTO_RESULT = 100;
     private final static int FILECHOOSER_RESULT = 101;
+    private final static int VIDEO_RESULT = 120;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
                 mUploadCallbackAboveL = filePathCallback;
-//                take("openAlbum");
-                take("goScan");
+                take("openAlbum");
+//                take("goScan"); // Fot test
                 return true;
             }
 
@@ -222,10 +229,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * 提供给H5来来打开相机扫码
+     */
+    @JavascriptInterface
+    public void openCameraScan() {
+        goScan();
+    }
+
+    /**
      * 打开相册
      */
     private void openAlbum() {
         PhotoUtils.openPic(this, FILECHOOSER_RESULT);
+    }
+
+    private Uri imageUri;
+    /**
+     * 拍照
+     */
+    private void takePhoto() {
+        File file = new File(Environment.getExternalStorageDirectory().getParent() + "/" + SystemClock.currentThreadTimeMillis() + ".jpg");
+        imageUri = Uri.fromFile(file);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            imageUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", file);
+        }
+        // 调用相机拍照
+        PhotoUtils.takePicture(this, imageUri, PHOTO_RESULT);
+    }
+
+    /**
+     * 录像
+     */
+    private void recordVideo() {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        // 设置视频质量
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        // 设置视频时长限制
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
+        // 开启摄像机
+        startActivityForResult(intent, VIDEO_RESULT);
     }
 
     /**
@@ -235,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SCAN);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -250,12 +291,13 @@ public class MainActivity extends AppCompatActivity {
             if (data != null) {
                 //返回的文本内容
                 String content = data.getStringExtra(DECODED_CONTENT_KEY);
-                // 获取到扫码结果之后需要返回给H5，待对接
-
+                // 获取到扫码结果之后需要返回给H5
                 Log.i(TAG, "Scan result string=>" + content);
+                webView.loadUrl("javascript:scan_result(" + content + ")");
+
                 //返回的BitMap图像
-                Bitmap bitmap = data.getParcelableExtra(DECODED_BITMAP_KEY);
-                Log.i(TAG, "Scan result bitmap=>" + bitmap.toString());
+                /*Bitmap bitmap = data.getParcelableExtra(DECODED_BITMAP_KEY);
+                Log.i(TAG, "Scan result bitmap=>" + bitmap.toString());*/
             }
         }
     }

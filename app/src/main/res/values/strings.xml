@@ -124,7 +124,8 @@
     <string name="result_wifi">Found WLAN Configuration</string>
     <string name="sbc_name">Google Book Search</string>
     <string name="wifi_changing_network">Requesting connection to network\u2026</string>
+    <string name="scan_title">Scan</string>
 
-    <string name="viewfinderview_status_text1">将二维码/条码放入取景框内</string>
-    <string name="viewfinderview_status_text2">即可自动扫描</string>
+    <string name="viewfinderview_status_text1">Put QR code in the center</string>
+    <string name="viewfinderview_status_text2">Auto Scan</string>
 </resources>
