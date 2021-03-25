@@ -61,10 +61,6 @@ android {
                 variant.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/apk/" + variant.flavorName + "/release")
                 def fileName = "app_${variant.flavorName}_release_v${variant.versionName}_${releaseTime()}.apk"
                 outputFileName = fileName
-            } else if (variant.buildType.name.equals('debug')) {
-                variant.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/apk/" + variant.flavorName + "/debug")
-                def fileName = "app_${variant.flavorName}_debug_v${variant.versionName}_${releaseTime()}.apk"
-                outputFileName = fileName
             }
         }
     }
