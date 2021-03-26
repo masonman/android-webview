@@ -30,6 +30,7 @@ android {
             minifyEnabled true  //是否启动混淆 ture:打开，false:关闭
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseConfig
+            zipAlignEnabled true    //是否对APK包执行ZIP对齐优化，减小zip体积，增加运行效率
         }
         debug {
             minifyEnabled false
@@ -49,8 +50,8 @@ android {
             buildConfigField("String", "baseUrl", "\"https://dockyard.alpha.gobindo.com\"")
         }
         bindoalpha {
-            versionCode 100
-            versionName "1.0.0"
+            versionCode 101
+            versionName "1.0.1"
             applicationId 'com.bindo.bindoalpha'
             buildConfigField("String", "baseUrl", "\"https://alpha.stg.gobindo.com\"")
         }

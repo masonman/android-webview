@@ -125,6 +125,7 @@
     <string name="sbc_name">Google Book Search</string>
     <string name="wifi_changing_network">Requesting connection to network\u2026</string>
     <string name="scan_title">Scan</string>
+    <string name="scan_tips">Scan Success</string>
 
     <string name="viewfinderview_status_text1">Put QR code in the center</string>
     <string name="viewfinderview_status_text2">Auto Scan</string>

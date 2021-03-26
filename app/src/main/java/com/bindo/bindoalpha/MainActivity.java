@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
                 mUploadCallbackAboveL = filePathCallback;
                 take("openAlbum");
-//                take("goScan"); // Fot test
                 return true;
             }
 
@@ -233,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @JavascriptInterface
     public void openCameraScan() {
-        goScan();
+        ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, REQUEST_CODE_SCAN);
     }
 
     /**
@@ -292,8 +291,8 @@ public class MainActivity extends AppCompatActivity {
                 //返回的文本内容
                 String content = data.getStringExtra(DECODED_CONTENT_KEY);
                 // 获取到扫码结果之后需要返回给H5
-                Log.i(TAG, "Scan result string=>" + content);
-                webView.loadUrl("javascript:scan_result(" + content + ")");
+                String jsFunStr = "javascript:scanResult(\"" + content + "\")";
+                webView.loadUrl(jsFunStr);
 
                 //返回的BitMap图像
                 /*Bitmap bitmap = data.getParcelableExtra(DECODED_BITMAP_KEY);
