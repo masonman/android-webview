@@ -16,13 +16,13 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -32,6 +32,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import com.bindo.bindoalpha.Utils.PhotoUtils;
+import com.bindo.bindoalpha.Utils.WebviewUtils;
 import com.bindo.bindoalpha.zxing.android.CaptureActivity;
 
 import java.io.File;
@@ -73,46 +74,7 @@ public class MainActivity extends AppCompatActivity {
     protected void loadWebView() {
         webView = findViewById(R.id.my_web_view);
         // 初始化WebView
-        initWebSettings(webView, this);
-        // 注入JS接口
-        webView.addJavascriptInterface(this, "bindo_utils");
-        // 从配置中加载web URL
-        webView.loadUrl(BASE_URL);
-    }
-
-    protected void initWebSettings(WebView webView, Context context) {
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setDefaultTextEncodingName("UTF-8");//设置默认为utf-8
-        webSettings.setTextZoom(100);//设置WebView中加载页面字体变焦百分比，默认100
-        //属性可以让webview只显示一列，也就是自适应页面大小,不能左右滑动
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
-        } else {
-            webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
-        }
-
-        webSettings.setAllowContentAccess(true); // 是否可访问Content Provider的资源，默认值 true
-        webSettings.setAllowFileAccess(true);    // 是否可访问本地文件，默认值 true
-
-        //设置此属性，可任意比例缩放
-        webSettings.setUseWideViewPort(false);
-        webSettings.setLoadWithOverviewMode(true);
-
-        //页面支持缩放
-        webSettings.setBuiltInZoomControls(false);
-        webSettings.setSupportZoom(false);
-        webSettings.setDisplayZoomControls(false);
-        //设置支持js
-        webSettings.setJavaScriptEnabled(true);
-        //设置 缓存模式
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        // 开启 DOM storage API 功能
-        webSettings.setDomStorageEnabled(true);
-
-        webView.setVerticalScrollBarEnabled(false);
-        webView.setVerticalScrollbarOverlay(false);
-        webView.setHorizontalScrollBarEnabled(false);
-        webView.setHorizontalScrollbarOverlay(false);
+        WebviewUtils.initWebSettings(webView);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -121,22 +83,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         webView.setWebChromeClient(new WebChromeClient() {
-
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
                 mUploadCallbackAboveL = filePathCallback;
                 take("openAlbum");
                 return true;
             }
-
         });
-
-        // 适配刘海屏，该处理移除，不在原生处理刘海高度，由H5端获取高度来自行处理
-        /**
-         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) webView.getLayoutParams();
-         lp.topMargin = getStatusBarHeight(context);
-         webView.setLayoutParams(lp);
-        */
+        // 注入JS接口
+        webView.addJavascriptInterface(this, "bindo_utils");
+        // 从配置中加载web URL
+        webView.loadUrl(BASE_URL);
     }
 
     /**
@@ -173,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 全透状态栏
+     * 设置全透状态栏
      */
     protected void setStatusBarFullTransparent() {
         if (Build.VERSION.SDK_INT >= 21) {//21表示5.0
@@ -327,6 +284,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mUploadCallbackAboveL = null;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (webView.canGoBack()) {
+                webView.goBack();
+                return true;
+            } else {
+                finish();
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
