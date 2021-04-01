@@ -48,8 +48,9 @@ public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private ValueCallback<Uri[]> mUploadCallbackAboveL;
     private final static int PHOTO_RESULT = 100;
-    private final static int FILECHOOSER_RESULT = 101;
+//    private final static int FILE_CHOOSER_RESULT = 101;
     private final static int VIDEO_RESULT = 120;
+    public static final int ALBUM_RESULT = 1026;// 选择图片的请求码
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
      * 打开相册
      */
     private void openAlbum() {
-        PhotoUtils.openPic(this, FILECHOOSER_RESULT);
+        PhotoUtils.openPic(this, ALBUM_RESULT);
     }
 
     private Uri imageUri;
@@ -238,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i(TAG, "requestCode=" + requestCode);
-        if (requestCode == FILECHOOSER_RESULT) {
+        if (requestCode == ALBUM_RESULT) {
             if (null == mUploadCallbackAboveL) return;
             if (mUploadCallbackAboveL != null) {
                 onActivityResultAboveL(requestCode, resultCode, data);
@@ -260,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void onActivityResultAboveL(int requestCode, int resultCode, Intent data) {
-        if (requestCode != FILECHOOSER_RESULT || mUploadCallbackAboveL == null) {
+        if (requestCode != ALBUM_RESULT || mUploadCallbackAboveL == null) {
             return;
         }
         Uri[] results = null;
@@ -286,6 +287,12 @@ public class MainActivity extends AppCompatActivity {
         mUploadCallbackAboveL = null;
     }
 
+    /**
+     * 监听系统物理返回按钮
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

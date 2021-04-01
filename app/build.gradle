@@ -38,22 +38,28 @@ android {
     }
     productFlavors {
         ryoyuhk {
-            versionCode 103
-            versionName "1.0.3"
+            versionCode 104
+            versionName "1.0.4"
             applicationId 'com.bindo.ryoyuhk'
-            buildConfigField("String", "baseUrl", "\"https://ryoyuhk.gobindo.com\"")
+            buildConfigField("String", "baseUrl", "\"https://go.bindo.co/p/ryoyuhk\"")
         }
         dockyard {
-            versionCode 101
-            versionName "1.0.1"
+            versionCode 102
+            versionName "1.0.2"
             applicationId 'com.bindo.dockyard'
-            buildConfigField("String", "baseUrl", "\"https://dockyard.alpha.gobindo.com\"")
+            buildConfigField("String", "baseUrl", "\"https://go.bindo.co/p/dockyard\"")
         }
         bindoalpha {
-            versionCode 101
-            versionName "1.0.1"
+            versionCode 102
+            versionName "1.0.2"
             applicationId 'com.bindo.bindoalpha'
-            buildConfigField("String", "baseUrl", "\"https://alpha.stg.gobindo.com\"")
+            buildConfigField("String", "baseUrl", "\"https://alpha.stg.gobindo.com\"") // https://go.bindo.co/p/alpha https://alpha.stg.gobindo.com
+        }
+        tastegourmet {
+            versionCode 100
+            versionName "1.0.0"
+            applicationId 'com.bindo.tastegourmet'
+            buildConfigField("String", "baseUrl", "\"https://go.bindo.co/p/tastegourmet\"")
         }
     }
     applicationVariants.all { variant ->

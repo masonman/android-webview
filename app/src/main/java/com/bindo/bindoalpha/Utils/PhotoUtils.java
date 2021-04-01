@@ -47,8 +47,13 @@ public class PhotoUtils {
      * @param requestCode 打开相册的请求码
      */
     public static void openPic(Activity activity, int requestCode) {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent photoPickerIntent = new Intent();
         photoPickerIntent.setType("image/*");
+        if (Build.VERSION.SDK_INT <19) {
+            photoPickerIntent.setAction(Intent.ACTION_GET_CONTENT);
+        }else {
+            photoPickerIntent.setAction(Intent.ACTION_PICK);
+        }
         activity.startActivityForResult(photoPickerIntent, requestCode);
     }
 
