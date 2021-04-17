@@ -48,9 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private ValueCallback<Uri[]> mUploadCallbackAboveL;
     private final static int PHOTO_RESULT = 100;
-//    private final static int FILE_CHOOSER_RESULT = 101;
+    public static final int ALBUM_RESULT = 101;// 选择图片的请求码
     private final static int VIDEO_RESULT = 120;
-    public static final int ALBUM_RESULT = 1026;// 选择图片的请求码
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @JavascriptInterface
     public void openCameraScan() {
-        ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, REQUEST_CODE_SCAN);
+        take("goScan");
     }
 
     /**
