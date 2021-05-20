@@ -72,13 +72,24 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     protected void loadWebView() {
+
         webView = findViewById(R.id.my_web_view);
+
         // 初始化WebView
         WebviewUtils.initWebSettings(webView);
+
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.i("拦截", "拦截到的url：" + url);
+                if (url.indexOf(BuildConfig.domainStr) == -1) {
+                    Intent intent = new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri uri = Uri.parse(url);
+                    intent.setData(uri);
+                    startActivity(intent);
+                    return true;
+                }
                 return false;
             }
         });
@@ -90,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         // 注入JS接口
         webView.addJavascriptInterface(this, "bindo_utils");
         // 从配置中加载web URL
@@ -133,14 +145,14 @@ public class MainActivity extends AppCompatActivity {
      * 设置全透状态栏
      */
     protected void setStatusBarFullTransparent() {
-        if (Build.VERSION.SDK_INT >= 21) {//21表示5.0
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//21表示5.0
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-        } else if (Build.VERSION.SDK_INT >= 19) {//19表示4.4
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {//19表示4.4
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             //虚拟键盘也透明
             //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);

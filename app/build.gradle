@@ -41,25 +41,29 @@ android {
             versionCode 104
             versionName "1.0.4"
             applicationId 'com.bindo.ryoyuhk'
+            buildConfigField("String", "domainStr", "\"bindo.co\"")
             buildConfigField("String", "baseUrl", "\"https://go.bindo.co/p/ryoyuhk\"")
         }
         dockyard {
             versionCode 102
             versionName "1.0.2"
             applicationId 'com.bindo.dockyard'
+            buildConfigField("String", "domainStr", "\"bindo.co\"")
             buildConfigField("String", "baseUrl", "\"https://go.bindo.co/p/dockyard\"")
         }
         bindoalpha {
-            versionCode 102
-            versionName "1.0.2"
+            versionCode 103
+            versionName "1.0.3"
             applicationId 'com.bindo.bindoalpha'
-            buildConfigField("String", "baseUrl", "\"https://alpha.stg.gobindo.com\"") // https://go.bindo.co/p/alpha https://alpha.stg.gobindo.com
+            buildConfigField("String", "domainStr", "\"bindo.co\"")
+            buildConfigField("String", "baseUrl", "\"https://go.bindo.co/p/alpha\"") // https://go.bindo.co/p/alpha https://alpha.stg.gobindo.com
         }
         tastegourmet {
-            versionCode 100
-            versionName "1.0.0"
+            versionCode 102
+            versionName "1.0.2"
             applicationId 'com.bindo.tastegourmet'
-            buildConfigField("String", "baseUrl", "\"https://go.bindo.co/p/tastegourmet\"")
+            buildConfigField("String", "domainStr", "\"bindo.co\"")
+            buildConfigField("String", "baseUrl", "\"https://go.bindo.co/p/tastegourmet\"") // https://go.bindo.co/p/tastegourmet https://tastegourmet.alpha.gobindo.com
         }
     }
     applicationVariants.all { variant ->
