@@ -82,7 +82,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.i("拦截", "拦截到的url：" + url);
-                if (url.indexOf(BuildConfig.domainStr) == -1) {
+                if (url.indexOf(BuildConfig.domainStr) != -1 || url.indexOf("alipay") != -1) {
+                    return false;
+                } else {
                     Intent intent = new Intent();
                     intent.setAction("android.intent.action.VIEW");
                     Uri uri = Uri.parse(url);
@@ -90,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     return true;
                 }
-                return false;
             }
         });
         webView.setWebChromeClient(new WebChromeClient() {
